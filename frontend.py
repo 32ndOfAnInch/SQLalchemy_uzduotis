@@ -43,6 +43,9 @@ layoutr = [[sg.Table(values=darbuotojai_list, headings=headings,
             [sg.Text('Atlyginimas', size=10), sg.Input(default_text="", enable_events=True, key='-ATLYGINIMAS-')]
     ]
 
+def refresh_table():
+    darbuotojai_list = bke.spausdinti(session)
+    window['-TABLE-'].update(values=darbuotojai_list)
 
 layout = [[sg.Col(layoutl, p=0), sg.Col(layoutr, p=0, visible=False, key="-COL2-")]]
 window = sg.Window("Darboutojai", layout, size=(960, 720))
@@ -80,10 +83,10 @@ while True:
             ask_delete = sg.popup_yes_no(f"Ar tikrai norite atleisti darbuotoja ID: {atleisti_ask_id}? ")
             if ask_delete == "Yes":
                 bke.istrinti(session, atleisti_ask_id)
-                sg.popup_notify("Darbuotojas sekmingai ismestas is darbo")
                 # refreshiti lenta
-                darbuotojai_list = bke.spausdinti(session)
-                window['-TABLE-'].update(values=darbuotojai_list)
+                refresh_table()
+                # parodyti pranesima
+                sg.popup_notify("Darbuotojas sekmingai ismestas is darbo")
         else:
             pass
 
@@ -97,10 +100,10 @@ while True:
                 pareigos = window['-PAREIGOS-'].get()
                 atlyginimas = window['-ATLYGINIMAS-'].get()
                 bke.irasymas(vardas, pavarde, gim_data, pareigos, atlyginimas)
-                sg.popup_notify("Irasytas naujas darbuotojas")
                 # refreshiti lenta
-                darbuotojai_list = bke.spausdinti(session)
-                window['-TABLE-'].update(values=darbuotojai_list)
+                refresh_table()
+                # parodyti pranesima
+                sg.popup_notify("Irasytas naujas darbuotojas")
             else:
                 pass      
         except Exception as e:
@@ -118,10 +121,10 @@ while True:
                 pareigos = window['-PAREIGOS-'].get()
                 atlyginimas = window['-ATLYGINIMAS-'].get()
                 bke.keitimas(id, vardas, pavarde, gim_data, pareigos, atlyginimas)
-                sg.popup_notify("Darbuotojo duomenys sekmingai pakeisti")
                 # refreshiti lenta
-                darbuotojai_list = bke.spausdinti(session)
-                window['-TABLE-'].update(values=darbuotojai_list)
+                refresh_table()
+                # parodyti pranesima
+                sg.popup_notify("Darbuotojo duomenys sekmingai pakeisti")
             else:
                 pass
         except Exception as e:
