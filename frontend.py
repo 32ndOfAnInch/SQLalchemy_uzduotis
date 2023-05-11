@@ -12,15 +12,12 @@ session = Session()
 class Base(DeclarativeBase):
     pass
 
-layoutl = [[sg.Button("Atvaizduoti darbuotojus", key="-atvaizduoti-", button_color="#ff11ee", pad=10, size=(25, 1))],
-          [sg.Button("Irasyti nauja darbuotoja", key="-irasyti-", button_color="#ff11ee", pad=10, size=(25, 1))],
-          [sg.Button("Redaguoti darbuotojo duomenis", key="-redaguoti-", button_color="#ff11ee", pad=10, size=(25, 1))],
-          [sg.Button("Atleisti darbuotoja", key="-atleisti-", button_color="red", pad=10, size=(25, 1))],
-          [sg.Button("Uzdaryti lentele", key="-close-", button_color="#ff1155", pad=10, size=(25, 1))],
-          [sg.Text("", pad=(10, 90))],
-          [sg.Text("", pad=(10, 80))],
-          [sg.Button("Isvalyti laukus", key="-CLEAR-", button_color="#ff1155", pad=(10, 10), size=(25, 1))],
-          [sg.Button("Iseiti is programos", key="-EXIT-", button_color="#ff1155", pad=(10, 10), size=(25, 1))]]
+layoutl = [[sg.Button("Atvaizduoti darbuotojus", key="-atvaizduoti-", button_color="#23277b", pad=10, size=(25, 1), font=20)],
+          [sg.Button("Atleisti darbuotoja", key="-atleisti-", button_color="#7a223f", pad=10, size=(25, 1), font=20)],
+          [sg.Button("Uzdaryti lentele", key="-close-", button_color="#23277b", pad=10, size=(25, 1), font=20)],
+          [sg.Text("", pad=(10, 130))],
+          [sg.Text("", pad=(10, 130))],
+          [sg.Button("Iseiti is programos", key="-EXIT-", button_color="#23277b", pad=(10, 10), size=(25, 1), font=20)]]
 
 
 darbuotojai_list = []
@@ -30,25 +27,42 @@ layoutr = [[sg.Table(values=darbuotojai_list, headings=headings,
                     auto_size_columns=True,
                     display_row_numbers=False,
                     justification='left',
-                    num_rows=15,
+                    num_rows=11,
                     key='-TABLE-',
-                    row_height=32,
-                    enable_events=True
+                    row_height=40,
+                    enable_events=True,
+                    alternating_row_color="#460c1f",
+                    background_color="#271d20",
+                    font=20,
+                    selected_row_colors="white on black"
                     )],
-            [sg.Text('ID', size=10), sg.Input(default_text="", enable_events=True, key='-ID-', disabled=True)],
-            [sg.Text('Vardas', size=10), sg.Input(default_text="", enable_events=True, key='-VARDAS-')],
-            [sg.Text('Pavarde', size=10), sg.Input(default_text="", enable_events=True, key='-PAVARDE-')],
-            [sg.Text('Gimimo data', size=10), sg.Input(default_text="", enable_events=True, key='-GIMIMAS-')],
-            [sg.Text('Pareigos', size=10), sg.Input(default_text="", enable_events=True, key='-PAREIGOS-')],
-            [sg.Text('Atlyginimas', size=10), sg.Input(default_text="", enable_events=True, key='-ATLYGINIMAS-')]
+            [sg.Text('ID', size=10, font=20), sg.Input(default_text="", enable_events=True, key='-ID-', pad=(0, 10), font=20, disabled=True),
+             sg.Button("Irasyti nauja darbuotoja", key="-irasyti-", button_color="#23277b", pad=10, size=(25, 1), font=20)],
+            [sg.Text('Vardas', size=10, font=20), sg.Input(default_text="", enable_events=True, key='-VARDAS-', pad=(0, 10), font=20), 
+             sg.Button("Redaguoti duomenis", key="-redaguoti-", button_color="#23277b", pad=10, size=(25, 1), font=20)],
+            [sg.Text('Pavarde', size=10, font=20), sg.Input(default_text="", enable_events=True, key='-PAVARDE-', pad=(0, 10), font=20)],
+            [sg.Text('Gimimo data', size=10, font=20), sg.Input(default_text="", enable_events=True, key='-GIMIMAS-', pad=(0, 10), font=20)],
+            [sg.Text('Pareigos', size=10, font=20), sg.Input(default_text="", enable_events=True, key='-PAREIGOS-', pad=(0, 10), font=20)],
+            [sg.Text('Atlyginimas', size=10, font=20), sg.Input(default_text="", enable_events=True, key='-ATLYGINIMAS-', pad=(0, 10), font=20),
+             sg.Button("Isvalyti laukus", key="-CLEAR-", button_color="#23277b", pad=(10, 10), size=(25, 1), font=20)]
     ]
 
+# atnaujinti lentele
 def refresh_table():
     darbuotojai_list = bke.spausdinti(session)
     window['-TABLE-'].update(values=darbuotojai_list)
 
+# isvalyti laukelius
+def clear_inputs():
+    window['-ID-'].update(value="")
+    window['-VARDAS-'].update(value="")
+    window['-PAVARDE-'].update(value="")
+    window['-GIMIMAS-'].update(value="")
+    window['-PAREIGOS-'].update(value="")
+    window['-ATLYGINIMAS-'].update(value="")
+
 layout = [[sg.Col(layoutl, p=0), sg.Col(layoutr, p=0, visible=False, key="-COL2-")]]
-window = sg.Window("Darboutojai", layout, size=(960, 720))
+window = sg.Window("Darboutojai", layout, size=(1000, 780))
 
 while True:
     event, values = window.read()
@@ -85,6 +99,8 @@ while True:
                 bke.istrinti(session, atleisti_ask_id)
                 # refreshiti lenta
                 refresh_table()
+                # isvalyti laukelius
+                clear_inputs()
                 # parodyti pranesima
                 sg.popup_notify("Darbuotojas sekmingai ismestas is darbo")
         else:
@@ -102,6 +118,8 @@ while True:
                 bke.irasymas(vardas, pavarde, gim_data, pareigos, atlyginimas)
                 # refreshiti lenta
                 refresh_table()
+                # isvalyti laukelius
+                clear_inputs()
                 # parodyti pranesima
                 sg.popup_notify("Irasytas naujas darbuotojas")
             else:
@@ -131,12 +149,8 @@ while True:
             print(e)
 
     if event == "-CLEAR-":
-        window['-ID-'].update(value="")
-        window['-VARDAS-'].update(value="")
-        window['-PAVARDE-'].update(value="")
-        window['-GIMIMAS-'].update(value="")
-        window['-PAREIGOS-'].update(value="")
-        window['-ATLYGINIMAS-'].update(value="")
+        # isvalyti laukelius
+        clear_inputs()
 
     if event == sg.WINDOW_CLOSED or event == "-EXIT-":
         break
