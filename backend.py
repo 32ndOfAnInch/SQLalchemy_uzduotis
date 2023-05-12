@@ -72,12 +72,7 @@ def keitimas(id, vardas, pavarde, gim_data, pareigos, atlyginimas):
     session.commit()
 
 def irasymas(vardas_n, pavarde_n, gim_data, pareigos_n, atlyginimas_n):
-    vardas = vardas_n
-    pavarde = pavarde_n
-    gimimo_data = gim_data
-    pareigos = pareigos_n
-    atlyginimas = atlyginimas_n
-    darbuotojas = Darbuotojas(vardas=vardas, pavarde=pavarde, gimimo_data=gimimo_data, pareigos=pareigos, atlyginimas=atlyginimas)
+    darbuotojas = Darbuotojas(vardas=vardas_n, pavarde=pavarde_n, gimimo_data=gim_data, pareigos=pareigos_n, atlyginimas=atlyginimas_n)
     session.add(darbuotojas)
     session.commit()
 

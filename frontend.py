@@ -128,8 +128,9 @@ while True:
             print(e)
 
     if event == "-redaguoti-":
+        red_id = window['-ID-'].get()
         try:
-            ask_edit = sg.popup_yes_no(f"Ar tikrai norite redaguoti darbuotojo duomenis? ID = {window['-ID-'].get()}")
+            ask_edit = sg.popup_yes_no(f"Ar tikrai norite redaguoti darbuotojo duomenis? ID = {red_id}")
             if ask_edit == "Yes":
                 # input reiksmiu paemimas
                 id = window['-ID-'].get()
@@ -141,6 +142,8 @@ while True:
                 bke.keitimas(id, vardas, pavarde, gim_data, pareigos, atlyginimas)
                 # refreshiti lenta
                 refresh_table()
+                # isvalyti laukelius
+                clear_inputs()
                 # parodyti pranesima
                 sg.popup_notify("Darbuotojo duomenys sekmingai pakeisti")
             else:
